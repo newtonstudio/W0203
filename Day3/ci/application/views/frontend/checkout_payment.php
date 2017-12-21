@@ -34,7 +34,7 @@
 									<INPUT type="hidden" name="MerchantCode" value="<?=$merchantCode?>">
 									<INPUT type="hidden" name="PaymentId" value="">
 									<INPUT type="hidden" name="RefNo" value="<?=$RefNo?>">
-									<INPUT type="hidden" name="Amount" value="<?=$amount?>">
+									<INPUT type="hidden" name="Amount" value="<?=$poData['total_amount']?>">
 									<INPUT type="hidden" name="Currency" value="<?=$currency?>">
 									<INPUT type="hidden" name="ProdDesc" value="<?=$productDesc?>">
 									<INPUT type="hidden" name="UserName" value="<?=$poData['firstName'].' '.$poData['lastName']?>">
@@ -46,9 +46,7 @@
 									<INPUT type="hidden" name="ResponseURL"
 									value="<?=base_url('checkout_completed/'.$poData['id'])?>">
 									<INPUT type="hidden" name="BackendURL"
-									value="<?=base_url('checkout_callback')?>">
-									
-										
+									value="<?=base_url('checkout_callback')?>">									
 									
 								</fieldset>
 								<div class="text-right">										
