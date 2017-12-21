@@ -300,7 +300,7 @@ class Frontend extends CI_Controller {
 		$html .= "Telephone: ".$tel."<br/>";
 		$html .= "Total Amount: RM".$total_amount."<br/>";
 		$html .= "Your Order Details as below:";
-		$html .= "<table width='100%'>";
+		$html .= "<table width='100%' border='1' cellpadding='5' cellspacing='0'>";
 		$html .= "<thead><tr><th>No.</th><th>Product</th><th>Unit Price</th><th>Qty</th><th>Sub Total</th></tr></thead>";
 
 		$html .= "<tbody>";
