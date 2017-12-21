@@ -200,7 +200,7 @@
 													<p class="small"><?=substr($v['brief'],0,100)."..."?></p>
 													<div class="elements-list clearfix">
 														<span class="price"><del>$<?=number_format($v['ori_price'],2)?></del> $<?=number_format($v['price'],2)?></span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
+														<a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
 													</div>
 												</div>
 											</div>
@@ -213,370 +213,72 @@
 								</div>
 								<div class="tab-pane" id="pill-2">
 									<div class="row masonry-grid-fitrows grid-space-10">
+										<?php
+										if(!empty($productList)) {
+											foreach($productList as $v) {
+										?>
 										<div class="col-md-3 col-sm-6 masonry-grid-item">
 											<div class="listing-item white-bg bordered mb-20">
 												<div class="overlay-container">
-													<img src="images/product-2.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-2.jpg"><i class="fa fa-search-plus"></i></a>
+													<img src="<?=$v['pic1']?>" alt="">
+													<a class="overlay-link popup-img-single" href="<?=$v['pic1']?>"><i class="fa fa-search-plus"></i></a>
+													
 													<div class="overlay-to-top links">
 														<span class="small">
 															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
+															<a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
 														</span>
 													</div>
 												</div>
 												<div class="body">
-													<h3><a href="shop-product.html">Consectetur adipisicing elit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
+													<h3><a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>"><?=$v['title']?></a></h3>
+													<p class="small"><?=substr($v['brief'],0,100)."..."?></p>
 													<div class="elements-list clearfix">
-														<span class="price">$199.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
+														<span class="price"><del>$<?=number_format($v['ori_price'],2)?></del> $<?=number_format($v['price'],2)?></span>
+														<a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
 													</div>
 												</div>
 											</div>
 										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-1.jpg" alt="">
-													<span class="badge">New</span>
-													<a class="overlay-link popup-img-single" href="images/product-1.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Suscipit consequatur velit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$70.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-4.jpg" alt="">
-													<span class="badge">30% OFF</span>
-													<a class="overlay-link popup-img-single" href="images/product-4.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Lorem ipsum dolor sit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price"><del>$99.00</del> $69.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-3.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-3.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Quas inventore modi</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$9.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-6.jpg" alt="">
-													<span class="badge">20% OFF</span>
-													<a class="overlay-link popup-img-single" href="images/product-6.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Reprehenderit a reiciendis</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price"><del>$161.25</del> $129.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-5.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-5.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Velit Suscipit consequatur</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$12.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-8.jpg" alt="">
-													<span class="badge">Offer</span>
-													<a class="overlay-link popup-img-single" href="images/product-8.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Soluta suscipit dolore</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$11.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-7.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-7.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Cumque sequi repellat</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$29.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
+										<?php
+											}
+										}
+										?>
 									</div>
 								</div>
 								<div class="tab-pane" id="pill-3">
 									<div class="row masonry-grid-fitrows grid-space-10">
+										<?php
+										if(!empty($productList)) {
+											foreach($productList as $v) {
+										?>
 										<div class="col-md-3 col-sm-6 masonry-grid-item">
 											<div class="listing-item white-bg bordered mb-20">
 												<div class="overlay-container">
-													<img src="images/product-4.jpg" alt="">
-													<span class="badge">30% OFF</span>
-													<a class="overlay-link popup-img-single" href="images/product-4.jpg"><i class="fa fa-search-plus"></i></a>
+													<img src="<?=$v['pic1']?>" alt="">
+													<a class="overlay-link popup-img-single" href="<?=$v['pic1']?>"><i class="fa fa-search-plus"></i></a>
+													
 													<div class="overlay-to-top links">
 														<span class="small">
 															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
+															<a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
 														</span>
 													</div>
 												</div>
 												<div class="body">
-													<h3><a href="shop-product.html">Lorem ipsum dolor sit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
+													<h3><a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>"><?=$v['title']?></a></h3>
+													<p class="small"><?=substr($v['brief'],0,100)."..."?></p>
 													<div class="elements-list clearfix">
-														<span class="price"><del>$99.00</del> $69.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
+														<span class="price"><del>$<?=number_format($v['ori_price'],2)?></del> $<?=number_format($v['price'],2)?></span>
+														<a href="<?=base_url('product_detail/'.$v['id'].'/'.$v['title'])?>" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
 													</div>
 												</div>
 											</div>
 										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-3.jpg" alt="">
-													<span class="badge">New</span>
-													<a class="overlay-link popup-img-single" href="images/product-3.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Quas inventore modi</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$9.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-2.jpg" alt="">
-													<span class="badge">30% OFF</span>
-													<a class="overlay-link popup-img-single" href="images/product-2.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Consectetur adipisicing elit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price"><del>$199.00</del> $140.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-1.jpg" alt="">
-													<span class="badge">Last 3 Pieces</span>
-													<a class="overlay-link popup-img-single" href="images/product-1.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Suscipit consequatur velit</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$70.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-8.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-8.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Soluta suscipit dolore</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$11.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-7.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-7.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Cumque sequi repellat</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$29.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-6.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-6.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Reprehenderit a reiciendis</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$129.00</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-6 masonry-grid-item">
-											<div class="listing-item white-bg bordered mb-20">
-												<div class="overlay-container">
-													<img src="images/product-5.jpg" alt="">
-													<a class="overlay-link popup-img-single" href="images/product-5.jpg"><i class="fa fa-search-plus"></i></a>
-													<div class="overlay-to-top links">
-														<span class="small">
-															<a href="#" class="btn-sm-link"><i class="fa fa-heart-o pr-10"></i>Add to Wishlist</a>
-															<a href="#" class="btn-sm-link"><i class="icon-link pr-5"></i>View Details</a>
-														</span>
-													</div>
-												</div>
-												<div class="body">
-													<h3><a href="shop-product.html">Velit Suscipit consequatur</a></h3>
-													<p class="small">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas inventore modi.</p>
-													<div class="elements-list clearfix">
-														<span class="price">$12.99</span>
-														<a href="#" class="pull-right margin-clear btn btn-sm btn-default-transparent btn-animated">Add To Cart<i class="fa fa-shopping-cart"></i></a>
-													</div>
-												</div>
-											</div>
-										</div>
+										<?php
+											}
+										}
+										?>
 									</div>
 								</div>
 							</div>
