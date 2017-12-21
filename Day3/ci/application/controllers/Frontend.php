@@ -425,6 +425,8 @@ class Frontend extends CI_Controller {
 			$errdesc = $_REQUEST["ErrDesc"];
 			$signature = $_REQUEST["Signature"];
 
+			$amount = str_replace(".", "", $amount);
+
 			$mysignature = $this->iPay88_signature($this->data['merchantKey'].$merchantcode.$refno.$amount.$ecurrency);
 
 			if($mysignature != $signature) {
@@ -476,6 +478,7 @@ class Frontend extends CI_Controller {
 	//last step
 	public function checkout_completed($order_id){
 
+		$this->load->model("Purchase_order_model");
 
 		$poData = $this->Purchase_order_model->getOne(array(
 			'id' => $order_id,			
