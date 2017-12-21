@@ -23,7 +23,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://w0203.local/';
+if($_SERVER['HTTP_HOST'] == "w0203.local") {
+	$config['base_url'] = 'http://w0203.local/';
+} else {
+	$config['base_url'] = 'http://i-beauty.com.my/';
+}
 
 /*
 |--------------------------------------------------------------------------

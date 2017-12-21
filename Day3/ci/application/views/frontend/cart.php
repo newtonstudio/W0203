@@ -72,8 +72,8 @@
 								</tbody>
 							</table>
 							<div class="text-right">	
-								<a href="shop-cart.html" class="btn btn-group btn-default">Update Cart</a>
-								<a href="shop-checkout.html" class="btn btn-group btn-default">Checkout</a>
+								<a href="#" class="btn btn-group btn-default">Update Cart</a>
+								<a href="<?=base_url('checkout')?>" class="btn btn-group btn-default">Checkout</a>
 							</div>
 
 						</div>

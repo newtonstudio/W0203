@@ -52,6 +52,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $route['addcart'] = "frontend/addcart";
 $route['cart'] = "frontend/cart";
+$route['checkout'] = "frontend/checkout";
+$route['checkout_submit'] = "frontend/checkout_submit";
+$route['checkout_payment'] = "frontend/checkout_payment";
 
 $route['products'] = "frontend/products";
 $route['product_detail/(:num)/(:any)'] = "frontend/product_detail/$1/$2";
