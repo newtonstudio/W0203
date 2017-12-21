@@ -296,6 +296,35 @@ class Frontend extends CI_Controller {
 		$html  = "";
 		$html .= "Hi,<br/>";
 		$html .= "You have receive this email because someone has make purchase from your website<br/>";
+		$html .= "Name: ".$firstName." ".$lastName."<br/>";
+		$html .= "Telephone: ".$tel."<br/>";
+		$html .= "Total Amount: RM".$total_amount."<br/>";
+		$html .= "Your Order Details as below:";
+		$html .= "<table width='100%'>";
+		$html .= "<thead><tr><th>No.</th><th>Product</th><th>Unit Price</th><th>Qty</th><th>Sub Total</th></tr></thead>";
+
+		$html .= "<tbody>";
+		$i=1;
+		$total_amount=0;
+		if(!empty($this->data['cartList'])) {
+			foreach($this->data['cartList'] as $v) {
+
+				$total_amount+=($v['product_price']*$v['qty']);
+
+				$html .= '<tr><td>'.$i.'</td><td>'.$v['product_title'].'</td><td>'.$v['product_price'].'</td><td>'.$v['qty'].'</td><td>'.($v['product_price']*$v['qty']).'</td></tr>';
+				$i++;
+			}
+		}
+
+		$html .= "</tbody>";
+
+		$html .= "<tfoot>";
+		$html .= '<tr><th colspan="4"></th><th>'.$total_amount.'</th></tr>';
+		$html .= "</tfoot>";
+
+
+		$html .= "</table>";
+
 		$html .= "<br/><br/>";
 		$html .= "Yours sincerely";
 
@@ -446,6 +475,18 @@ class Frontend extends CI_Controller {
 
 	//last step
 	public function checkout_completed($order_id){
+
+
+		$poData = $this->Purchase_order_model->getOne(array(
+			'id' => $order_id,			
+			'is_deleted' => 0,
+		));
+
+		if(empty($poData)) {
+			show_error("This Purchase order is not exists");
+		}
+
+		$this->data['poData'] = $poData;
 
 		$this->load->view('frontend/header', $this->data);
 		$this->load->view('frontend/checkout_completed', $this->data);
