@@ -54,7 +54,9 @@ $route['addcart'] = "frontend/addcart";
 $route['cart'] = "frontend/cart";
 $route['checkout'] = "frontend/checkout";
 $route['checkout_submit'] = "frontend/checkout_submit";
-$route['checkout_payment'] = "frontend/checkout_payment";
+$route['checkout_payment/(:num)'] = "frontend/checkout_payment/$1";
+$route['checkout_callback'] = "frontend/checkout_callback";
+$route['checkout_completed/(:num)'] = "frontend/checkout_completed/$1";
 
 $route['products'] = "frontend/products";
 $route['product_detail/(:num)/(:any)'] = "frontend/product_detail/$1/$2";

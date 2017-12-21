@@ -16,6 +16,10 @@ class Frontend extends CI_Controller {
 			'sid' => $sid,
 			'is_deleted' => 0,
 		));
+
+		$this->data['endpoint'] = "https://www.mobile88.com/epayment/entry.asp";
+		$this->data['merchantCode'] = "M06919";
+		$this->data['merchantKey'] = "oIGuAJiXEv";
 		
 		$this->data['cartList'] = $cartList;
 
@@ -219,8 +223,10 @@ class Frontend extends CI_Controller {
 		$this->load->model('Purchase_order_model');
 		$this->load->model('Purchase_order_details_model');
 
+		$order_serial = date("YmdHis").rand(100,999);
+
 		$order_id = $this->Purchase_order_model->insert(array(
-			'order_serial' => date("YmdHis").rand(100,999),
+			'order_serial' => $order_serial,
 			'firstName' => $firstName,
 			'lastName'	=> $lastName,
 			'tel'		=> $tel,
@@ -245,8 +251,12 @@ class Frontend extends CI_Controller {
 			'created_date'	=> date("Y-m-d H:i:s"),
 		));
 
+		$total_amount = 0;
 		if(!empty($this->data['cartList'])) {
 			foreach($this->data['cartList'] as $v) {
+
+				$total_amount += ($v['product_price']*$v['qty']);
+
 				$this->Purchase_order_details_model->insert(array(
 					'order_id' => $order_id,
 					'product_id' => $v['product_id'],
@@ -258,6 +268,15 @@ class Frontend extends CI_Controller {
 			}
 		}
 
+
+		$this->Purchase_order_model->update(array(
+			'id' => $order_id,
+		),
+		array(
+			'total_amount' => $total_amount,
+			'modified_date' => date("Y-m-d H:i:s"),
+		));
+
 		$sid		= $this->session->get_sessionID();
 
 		$cartList = $this->Cart_model->update(array(
@@ -266,20 +285,167 @@ class Frontend extends CI_Controller {
 			'is_deleted' => 1,
 			'modified_date' => date("Y-m-d H:i:s"),
 		));
-		
-		redirect(base_url('checkout_payment'));
+
+		//Send Email
+		$this->load->library("emailer");
+
+		$html  = "";
+		$html .= "Hi,<br/>";
+		$html .= "You have receive this email because someone has make purchase from your website<br/>";
+		$html .= "<br/><br/>";
+		$html .= "Yours sincerely";
+
+
+		$this->emailer->send("newtonstudio@gmail.com", "Purchase Order [".$order_serial."]", $html);
+
+		redirect(base_url('checkout_payment/'.$order_id));
 
 	}
 
-	public function checkout_payment(){
+
+	public function iPay88_signature($source)
+	{
+	  return base64_encode($this->hex2bin(sha1($source)));
+	}
+
+
+	private function hex2bin($hexSource)
+	{		
+		 $bin = "";
+			for ($i=0;$i<strlen($hexSource);$i=$i+2)
+			{
+			  $bin .= chr(hexdec(substr($hexSource,$i,2)));
+			}
+		  return $bin;
+	} 
+
+	//Payment Step1
+	public function checkout_payment($order_id){
 
 		$this->load->model('Purchase_order_model');
 		$this->load->model('Purchase_order_details_model');
+
+		$poData = $this->Purchase_order_model->getOne(array(
+			'id' => $order_id,
+			'pay_status' => 0,
+			'is_deleted' => 0,
+		));
+
+		if(empty($poData)) {
+			show_error("This Purchase order is not exists");
+		}
+
+		$poDetails = $this->Purchase_order_details_model->get_where(array(
+			'order_id' => $order_id,
+			'is_deleted' => 0,
+		));
+
+		$productDesc = "";
+		if(!empty($poDetails)) {
+			foreach($poDetails as $v) {
+				$productDesc[] = $v['title'];
+			}
+		}
+
+		$this->data['productDesc'] = substr(implode(",",$productDesc),0,100);
+
+		$this->data['poData'] = $poData;
+
+
+		//ipay88 signature 
+		$MerchantKey = $this->data['merchantKey'];
+		$MerchantCode = $this->data['merchantCode'];
+		$RefNo = $poData['order_serial'];
+		$amount = str_replace(".", "", $poData['total_amount']); // must remove , and . before hash
+		$currency = "MYR";
+
+
+		$this->data['RefNo'] = $RefNo;
+		$this->data['amount'] = $amount;
+		$this->data['currency'] = $currency;
+		$this->data['signature'] = $this->iPay88_signature($MerchantKey.$MerchantCode.$RefNo.$amount.$currency);
+
+
+
 
 		$this->load->view('frontend/header', $this->data);
 		$this->load->view('frontend/checkout_payment', $this->data);
 		$this->load->view('frontend/footer', $this->data);
 
+
+	}
+
+	//2nd step
+	public function checkout_callback(){
+
+		try{
+
+			$merchantcode = $_REQUEST["MerchantCode"];
+			$paymentid = $_REQUEST["PaymentId"];
+			$refno = $_REQUEST["RefNo"];
+			$amount = $_REQUEST["Amount"];
+			$ecurrency = $_REQUEST["Currency"];
+			$remark = $_REQUEST["Remark"];
+			$transid = $_REQUEST["TransId"];
+			$authcode = $_REQUEST["AuthCode"];
+			$estatus = $_REQUEST["Status"];
+			$errdesc = $_REQUEST["ErrDesc"];
+			$signature = $_REQUEST["Signature"];
+
+			$mysignature = $this->iPay88_signature($this->data['merchantKey'].$merchantcode.$refno.$amount.$ecurrency);
+
+			if($mysignature != $signature) {
+				throw new Exception("Signature error: ".$signature." vs ".$mysignature);
+			}
+
+			$this->load->model("Purchase_order_model");
+
+			$poData = $this->Purchase_order_model->getOne(array(
+				'order_serial' => $refno,
+			));
+			if(empty($poData)) {
+				throw new Exception("This purchase order is not exists");
+			}
+
+			if(!empty($poData['pay_status'])) {
+				throw new Exception("This purchase order already paid");
+			}
+
+			$this->Purchase_order_model->update(array(
+				'id' => $poData['id'],
+			), array(
+				'pay_status' => 1,
+				'modified_date' => date("Y-m-d H:i:s"),
+			));
+			echo "RECEIVEOK";
+
+
+		} catch (Exception $e) {
+
+			//Send Email
+			$this->load->library("emailer");
+
+			$html  = $e->getMessage();
+
+			$this->emailer->send("newtonstudio@gmail.com", "ERROR in checkout_callback", $html);
+			echo "RECEIVEOK";
+
+		}
+
+
+		
+
+
+		
+
+	}
+
+	//last step
+	public function checkout_completed($order_id){
+
+		$this->load->view('frontend/header', $this->data);
+		$this->load->view('frontend/checkout_completed', $this->data);
+		$this->load->view('frontend/footer', $this->data);
 
 	}
 
