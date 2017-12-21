@@ -119,12 +119,16 @@ class Frontend extends CI_Controller {
 		$qty 		= $this->input->post("qty", true);
 		$sid		= $this->session->get_sessionID();
 
+		//echo $sid;
+		//exit;
+
 		$this->load->model("Cart_model");
 		$this->load->model("Product_model");
 
 		$cartExist = $this->Cart_model->getOne(array(
 			'sid' => $sid,
 			'product_id' => $product_id,
+			'is_deleted' => 0,
 		));
 		//this product is not yet inside the cart
 		if(empty($cartExist)) {
