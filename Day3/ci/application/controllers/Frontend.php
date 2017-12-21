@@ -424,13 +424,14 @@ class Frontend extends CI_Controller {
 			$estatus = $_REQUEST["Status"];
 			$errdesc = $_REQUEST["ErrDesc"];
 			$signature = $_REQUEST["Signature"];
+			$status = "1";
 
 			$amount = str_replace(".", "", $amount);
 
-			$mysignature = $this->iPay88_signature($this->data['merchantKey'].$merchantcode.$refno.$amount.$ecurrency);
+			$mysignature = $this->iPay88_signature($this->data['merchantKey'].$merchantcode.$paymentid.$refno.$amount.$ecurrency.$estatus);
 
 			if($mysignature != $signature) {
-				throw new Exception("Signature error: ".$signature." vs ".$mysignature);
+				throw new Exception("Signature error: ".$signature." vs ".$mysignature."<br/>".print_r($_REQUEST,true));
 			}
 
 			$this->load->model("Purchase_order_model");
