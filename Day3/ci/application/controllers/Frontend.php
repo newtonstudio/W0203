@@ -183,6 +183,8 @@ class Frontend extends CI_Controller {
 
 	}
 
+	//To generate a purchase order, but with pay_status = 0 (unpaid)
+	//And bring user to payment page directly
 	public function checkout_submit(){
 		
 		$firstName = $this->input->post('firstName', true);
@@ -311,7 +313,8 @@ class Frontend extends CI_Controller {
 		  return $bin;
 	} 
 
-	//Payment Step1
+	//The Payment Page, going to send out the form to ipay88
+	//Take note that the signature function might need to refer to the documentation
 	public function checkout_payment($order_id){
 
 		$this->load->model('Purchase_order_model');
@@ -357,6 +360,27 @@ class Frontend extends CI_Controller {
 		$this->data['currency'] = $currency;
 		$this->data['signature'] = $this->iPay88_signature($MerchantKey.$MerchantCode.$RefNo.$amount.$currency);
 
+
+		$paymentMethodList = array(
+			'' => "Default Payment Method",
+			'2' => "Credit Card (MYR)",
+			'6' => "Maybank2U",
+			'8' => "Alliance Online",
+			'10' => "AmOnline",
+			'14' => "RHB Online",
+			'15' => "Hong Leong Online",
+			'16' => "FPX",
+			'20' => "CIMB Click",
+			'22' => "Web Cash",
+			'100' => "Celcom AirCash",
+			'102' => "Bank Rakyat Internet Banking",
+			'103' => "AffinOnline",
+			'48' => "PayPal (MYR)",
+		);
+
+		$this->data['paymentMethodList'] = $paymentMethodList;
+
+
 		$this->load->view('frontend/header', $this->data);
 		$this->load->view('frontend/checkout_payment', $this->data);
 		$this->load->view('frontend/footer', $this->data);
@@ -364,7 +388,8 @@ class Frontend extends CI_Controller {
 
 	}
 
-	//2nd step
+	//When payment successful, ipay88 server will post to this api
+	//we use this api to update payment status of purchase order and send email to admin/user
 	public function checkout_callback(){
 
 		try{
@@ -471,13 +496,7 @@ class Frontend extends CI_Controller {
 			$this->emailer->send("newtonstudio@gmail.com", "ERROR in checkout_callback", $html);
 			echo "RECEIVEOK";
 
-		}
-
-
-		
-
-
-		
+		}		
 
 	}
 

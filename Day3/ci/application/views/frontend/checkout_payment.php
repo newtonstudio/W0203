@@ -31,8 +31,27 @@
 								<fieldset>
 									<legend>Payment</legend>
 
+									<?php
+									if(!empty($paymentMethodList)) {
+										foreach($paymentMethodList as $k=>$v) {
+									?>
+									<div class="space"></div>
+									<div class="row">
+										<div class="col-lg-3">
+											<div class="radio">
+												<label>
+													<input type="radio" name="PaymentId" value="<?=$k?>">
+													<?=$v?><!--<i class="fa fa-cc-paypal pl-10"></i>-->
+												</label>
+											</div>
+											<div class="space-bottom"></div>
+										</div>										
+									</div>
+									<?php		
+										}
+									}
+									?>
 									<INPUT type="hidden" name="MerchantCode" value="<?=$merchantCode?>">
-									<INPUT type="hidden" name="PaymentId" value="">
 									<INPUT type="hidden" name="RefNo" value="<?=$RefNo?>">
 									<INPUT type="hidden" name="Amount" value="<?=$poData['total_amount']?>">
 									<INPUT type="hidden" name="Currency" value="<?=$currency?>">
