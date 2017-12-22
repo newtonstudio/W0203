@@ -423,8 +423,7 @@ class Frontend extends CI_Controller {
 			$authcode = $_REQUEST["AuthCode"];
 			$estatus = $_REQUEST["Status"];
 			$errdesc = $_REQUEST["ErrDesc"];
-			$signature = $_REQUEST["Signature"];
-			$status = "1";
+			$signature = $_REQUEST["Signature"];			
 
 			$amount = str_replace(".", "", $amount);
 
