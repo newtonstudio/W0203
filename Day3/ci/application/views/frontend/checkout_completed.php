@@ -44,7 +44,7 @@
 							<!-- page-title end -->
 							<p class="lead text-center"></p>
 							<p class="text-center">
-								<a href="<?=base_url('checkout_payment/'.$poData['id'])?>" class="btn btn-default btn-lg">Try again </a>	
+								<a href="<?=base_url('checkout_retry/'.$poData['id'])?>" class="btn btn-default btn-lg">Try again </a>	
 							</p>
 
 							<?php	

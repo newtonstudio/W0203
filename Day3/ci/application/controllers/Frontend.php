@@ -289,48 +289,7 @@ class Frontend extends CI_Controller {
 			'is_deleted' => 1,
 			'modified_date' => date("Y-m-d H:i:s"),
 		));
-
-		//Send Email
-		$this->load->library("emailer");
-
-		$html  = "";
-		$html .= "Hi,<br/>";
-		$html .= "You have receive this email because someone has make purchase from your website<br/>";
-		$html .= "Name: ".$firstName." ".$lastName."<br/>";
-		$html .= "Telephone: ".$tel."<br/>";
-		$html .= "Total Amount: RM".$total_amount."<br/>";
-		$html .= "Your Order Details as below:";
-		$html .= "<table width='100%' border='1' cellpadding='5' cellspacing='0'>";
-		$html .= "<thead><tr><th>No.</th><th>Product</th><th>Unit Price</th><th>Qty</th><th>Sub Total</th></tr></thead>";
-
-		$html .= "<tbody>";
-		$i=1;
-		$total_amount=0;
-		if(!empty($this->data['cartList'])) {
-			foreach($this->data['cartList'] as $v) {
-
-				$total_amount+=($v['product_price']*$v['qty']);
-
-				$html .= '<tr><td>'.$i.'</td><td>'.$v['product_title'].'</td><td>'.$v['product_price'].'</td><td>'.$v['qty'].'</td><td>'.($v['product_price']*$v['qty']).'</td></tr>';
-				$i++;
-			}
-		}
-
-		$html .= "</tbody>";
-
-		$html .= "<tfoot>";
-		$html .= '<tr><th colspan="4"></th><th>'.$total_amount.'</th></tr>';
-		$html .= "</tfoot>";
-
-
-		$html .= "</table>";
-
-		$html .= "<br/><br/>";
-		$html .= "Yours sincerely";
-
-
-		$this->emailer->send("newtonstudio@gmail.com", "Purchase Order [".$order_serial."]", $html);
-
+		
 		redirect(base_url('checkout_payment/'.$order_id));
 
 	}
@@ -398,9 +357,6 @@ class Frontend extends CI_Controller {
 		$this->data['currency'] = $currency;
 		$this->data['signature'] = $this->iPay88_signature($MerchantKey.$MerchantCode.$RefNo.$amount.$currency);
 
-
-
-
 		$this->load->view('frontend/header', $this->data);
 		$this->load->view('frontend/checkout_payment', $this->data);
 		$this->load->view('frontend/footer', $this->data);
@@ -434,6 +390,7 @@ class Frontend extends CI_Controller {
 			}
 
 			$this->load->model("Purchase_order_model");
+			$this->load->model("Purchase_order_details_model");
 
 			$poData = $this->Purchase_order_model->getOne(array(
 				'order_serial' => $refno,
@@ -452,6 +409,55 @@ class Frontend extends CI_Controller {
 				'pay_status' => 1,
 				'modified_date' => date("Y-m-d H:i:s"),
 			));
+
+			//Only Send Email When the payment is success
+			$this->load->library("emailer");
+
+			$html  = "";
+			$html .= "Hi,<br/>";
+			$html .= "You have receive this email because someone has make purchase from your website<br/>";
+			$html .= "Name: ".$poData['firstName']." ".$poData['lastName']."<br/>";
+			$html .= "Telephone: ".$poData['tel']."<br/>";
+			$html .= "Total Amount: RM".$poData['total_amount']."<br/>";
+			$html .= "Your Order Details as below:";
+			$html .= "<table width='100%' border='1' cellpadding='5' cellspacing='0'>";
+			$html .= "<thead><tr><th>No.</th><th>Product</th><th>Unit Price</th><th>Qty</th><th>Sub Total</th></tr></thead>";
+
+			$podList = $this->Purchase_order_details_model->get_where(array(
+				'order_id' => $poData['id'],
+				'is_deleted' => 0,
+			));
+
+
+			$html .= "<tbody>";
+			$i=1;
+			$total_amount=0;
+			if(!empty($podList)) {
+				foreach($podList as $v) {
+
+					$total_amount+=($v['price']*$v['qty']);
+
+					$html .= '<tr><td>'.$i.'</td><td>'.$v['title'].'</td><td>'.$v['price'].'</td><td>'.$v['qty'].'</td><td>'.($v['price']*$v['qty']).'</td></tr>';
+					$i++;
+				}
+			}
+
+			$html .= "</tbody>";
+
+			$html .= "<tfoot>";
+			$html .= '<tr><th colspan="4"></th><th>'.$total_amount.'</th></tr>';
+			$html .= "</tfoot>";
+
+
+			$html .= "</table>";
+
+			$html .= "<br/><br/>";
+			$html .= "Yours sincerely";
+
+
+			$this->emailer->send("newtonstudio@gmail.com", "Purchase Order [".$poData['order_serial']."]", $html);
+
+
 			echo "RECEIVEOK";
 
 
@@ -494,6 +500,35 @@ class Frontend extends CI_Controller {
 		$this->load->view('frontend/header', $this->data);
 		$this->load->view('frontend/checkout_completed', $this->data);
 		$this->load->view('frontend/footer', $this->data);
+
+	}
+
+	public function checkout_retry($order_id){
+
+		$this->load->model("Purchase_order_model");
+
+		$poData = $this->Purchase_order_model->getOne(array(
+			'pay_status' => 0,
+			'id' => $order_id,			
+			'is_deleted' => 0,
+		));
+
+		if(empty($poData)) {
+			show_error("This Purchase order is not exists");
+		} else {
+
+			$this->Purchase_order_model->update(array(
+				'id' => $order_id,	
+			), array(
+				'order_serial' => date("YmdHis").rand(100,999),
+				'modified_date' => date("Y-m-d H:i:s"),
+			));
+
+		}
+
+		redirect(base_url('checkout_payment/'.$order_id));
+
+
 
 	}
 
