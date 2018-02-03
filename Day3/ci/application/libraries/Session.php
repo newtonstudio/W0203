@@ -7,5 +7,13 @@ class Session {
 	public function get_sessionID() {
 		return session_id();
 	}
+
+	public function set_userdata($name, $value) {
+		$_SESSION[$name] = $value;
+	}
+
+	public function userdata($name) {
+		return $_SESSION[$name];
+	}
 }
 ?>

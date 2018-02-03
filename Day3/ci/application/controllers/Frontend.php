@@ -141,6 +141,8 @@ class Frontend extends CI_Controller {
 			$product_title = $productData['title'];
 			$product_price = $productData['price'];
 
+
+			// INSERT INTO cart (sid, product_id, product_title, product_price, qty, created_date) VALUES ('$sid','$product_id','$product_title','$product_price','$qty','date("Y-m-d H:i:s'));
 			$this->Cart_model->insert(array(
 				'sid' => $sid,
 				'product_id' => $product_id,
@@ -550,6 +552,212 @@ class Frontend extends CI_Controller {
 
 
 	}
+
+
+	public function register(){
+
+
+		$this->load->view('frontend/header', $this->data);
+		$this->load->view('frontend/register', $this->data);
+		$this->load->view('frontend/footer', $this->data);
+
+	}
+
+	public function register_submit(){
+
+		try {
+
+			$fullname = $this->input->post("name", true);
+			$email = $this->input->post("email", true);
+			$password = $this->input->post("password", true);
+			$repassword = $this->input->post("repassword", true);
+
+
+			if(empty($fullname)) {
+				throw new Exception("Your fullname cannot be blank");
+			}
+			if(empty($email)) {
+				throw new Exception("Your email cannot be blank");
+			}
+			if(empty($password)) {
+				throw new Exception("Your password cannot be blank");
+			}
+			if(empty($repassword)) {
+				throw new Exception("Your confirm password cannot be blank");
+			}
+
+			if($password != $repassword) {
+				throw new Exception("Your password is not same as the confirm password");
+			}
+
+			if(strlen($password) < 5) {
+				throw new Exception("Your password length must be more than 5");
+			}
+
+
+			$this->load->model("User_model");
+
+			$emailExist = $this->User_model->getOne(array(
+				'email' => $email,
+				'is_deleted' => 0,				
+			));
+
+			if(!empty($emailExist)) {
+				throw new Exception("This email has been registered");
+			}
+
+			$generatedCode = md5(date("YmdHis").rand(1000,9999));
+
+			$user_id = $this->User_model->insert(array(
+				'name' => $fullname,
+				'type' => "email",
+				'password' => sha1($password),
+				'email' => $email,
+				'verified' => 0,
+				'generatedCode' => $generatedCode,
+				'created_date' => date("Y-m-d H:i:s")
+ 			));
+
+ 			$this->load->library("emailer");
+
+			$html = "";
+
+			$html .= "Hi ".$fullname.",<br/><br/>";
+			$html .= "You have receive this email becozs you just registered from IBeauty. Please click the link below for email verification: <br/>";
+
+			$html .= '<a href="'.base_url('verify/'.$email.'/'.$generatedCode).'">Click Here!</a><br/><br/>';
+
+			$html .= 'Yours sincerely, <br/>';
+			$html .= "IBeauty";
+
+			$this->emailer->send($email, "[IBeauty] Email Verification", $html);
+
+			redirect(base_url('register_success'));
+
+
+
+		} catch (Exception $e) {
+
+			show_error($e->getMessage());
+
+		}
+
+	}
+
+	public function register_success(){
+
+
+		$this->load->view('frontend/header', $this->data);
+		$this->load->view('frontend/register_success', $this->data);
+		$this->load->view('frontend/footer', $this->data);
+
+	}
+
+
+	public function verify($email, $generatedCode) {
+
+		$this->load->model("User_model");
+		$userExists = $this->User_model->getOne(array(
+			'email' => $email,
+			'generatedCode' => $generatedCode,
+			'is_deleted' => 0,
+			'verified' => 0,
+		));
+		if(!empty($userExists)) {
+
+			$this->User_model->update(array(
+				'id' => $userExists['id'],
+			), array(
+				'verified' => 1,
+				'modified_date' => date("Y-m-d H:i:s"),
+			));
+
+			redirect(base_url('login?msg=verifiedSuccess'));
+
+		} else {
+
+			show_error("This user is not exists or his/her account already verified");
+
+		}
+
+
+	}
+
+	public function login(){
+
+
+		$this->load->view('frontend/header', $this->data);
+		$this->load->view('frontend/login', $this->data);
+		$this->load->view('frontend/footer', $this->data);
+
+	}
+
+	public function login_submit(){
+
+		try {
+
+			$email = $this->input->post("email", true);
+			$password = $this->input->post("password", true);
+
+			if(empty($email)) {
+				throw new Exception("email cannot be blank");
+			}
+
+			if(empty($password)) {
+				throw new Exception("password cannot be blank");
+			}
+
+			$this->load->model("User_model");
+			$userExists = $this->User_model->getOne(array(
+				'email' => $email,
+				'password' => sha1($password),
+				'is_deleted' => 0,
+			));
+			if(!empty($userExists)) {
+
+				if( empty($userExists['verified']) ) {
+					throw new Exception("Your email has not been verified");
+				}
+				$this->session->set_userdata("is_login", true);
+				redirect(base_url('profile'));
+
+			}
+
+
+
+
+		} catch (Exception $e) {
+
+			$this->data['errormsg'] = $e->getMessage();
+
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/login', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+		}
+
+
+
+	}
+
+	public function profile(){
+
+		$is_login = $this->session->userdata("is_login");
+
+		if(!$is_login) {
+			redirect(base_url('login'));
+		} else {
+
+
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/profile', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+		}
+
+	}
+
+
 
 
 }

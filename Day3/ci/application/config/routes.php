@@ -63,8 +63,21 @@ $route['products'] = "frontend/products";
 $route['product_detail/(:num)/(:any)'] = "frontend/product_detail/$1/$2";
 $route['contact'] = "frontend/contact";
 $route['about'] = "frontend/about";
+
+$route['login'] = "frontend/login";
+$route['login_submit'] = "frontend/login_submit";
+$route['register'] = "frontend/register";
+$route['register_submit'] = "frontend/register_submit";
+$route['register_success'] = "frontend/register_success";
+
+$route['verify/(:any)/(:any)'] = "frontend/verify/$1/$2";
+
+$route['profile'] = "frontend/profile";
+
 $route['default_controller'] = 'frontend/index';
 $route['(:num)'] = 'frontend/index/$1';
+
+
 
 
 $route['404_override'] = '';

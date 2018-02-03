@@ -25,6 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 if($_SERVER['HTTP_HOST'] == "w0203.local") {
 	$config['base_url'] = 'http://w0203.local/';
+} else if ($_SERVER['HTTP_HOST'] == "ibeauty.local") {
+	$config['base_url'] = 'http://ibeauty.local/';
 } else {
 	$config['base_url'] = 'http://i-beauty.com.my/';
 }

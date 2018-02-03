@@ -140,6 +140,9 @@
 													<li>
 														<a href="<?=base_url()?>">Home</a>								
 													</li>
+													<li>
+														<a href="<?=base_url('register')?>">Register</a>								
+													</li>
 												</ul>
 												<!-- main-menu end -->
 												
@@ -183,7 +186,7 @@
 																		?>
 																		<tr>
 																			<td class="quantity"><?=$v['qty']?> x</td>
-																			<td class="product"><a href="<?=base_url('product-detail/'.$v['product_id'].'/'.$v['product_title'])?>"><?=$v['product_title']?></a></td>
+																			<td class="product"><a href="<?=base_url('product_detail/'.$v['product_id'].'/'.$v['product_title'])?>"><?=$v['product_title']?></a></td>
 																			<td class="amount">$<?=number_format($v['product_price']*$v['qty'],2)?></td>
 																		</tr>
 																		<?php
