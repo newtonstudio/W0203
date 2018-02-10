@@ -85,6 +85,7 @@ $route['profile_submit'] = "frontend/profile_submit";
 $route['verifyMobile/(:any)'] = "frontend/verifyMobile/$1";
 $route['verifyMobileCode/(:num)'] = "frontend/verifyMobileCode/$1";
 $route['googleLogin'] = "frontend/googleLogin";
+$route['logoutGoogle'] = "frontend/logoutGoogle";
 $route['logoutStep2'] = "frontend/logoutStep2";
 
 $route['default_controller'] = 'frontend/index';
