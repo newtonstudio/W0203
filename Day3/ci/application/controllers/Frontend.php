@@ -1181,6 +1181,7 @@ class Frontend extends CI_Controller {
 			if(empty($userdata)) {
 
 				$this->User_model->insert(array(
+					'verified' => 1,
 					'type' => "google",
 					'name' => $name,
 					'avatar' => $avatar,
@@ -1195,6 +1196,7 @@ class Frontend extends CI_Controller {
 				$this->User_model->update(array(
 					'id' => $userdata['id'],
 				),array(
+					'verified' => 1,
 					'name' => $name,
 					'avatar' => $avatar,
 					'googleToken' => $googleToken,
