@@ -4,16 +4,15 @@
 <script type="text/javascript" src="<?=base_url('assets/html/template/plugins/jquery.min.js')?>"></script>
 <a href="#" onclick="signOut();">Sign out</a>
 <script>
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-  }
-  $(function(){
-  	signOut();
-  	location.href='<?=base_url('logoutStep2')?>';
-  })
+
+  gapi.load('client', {
+	  callback: function() {
+	    var auth2 = gapi.auth2.getAuthInstance();
+	    auth2.signOut().then(function () {
+	      location.href='<?=base_url('logoutStep2')?>';
+	    });
+	  }
+  });
 
 
 </script>
