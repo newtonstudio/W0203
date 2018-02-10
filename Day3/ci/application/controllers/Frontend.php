@@ -1035,6 +1035,29 @@ class Frontend extends CI_Controller {
 
 
 	public function logout(){
+
+		$type = $this->session->userdata("type");
+
+		if($type == "google") {
+
+			$this->session->destroy_session();
+			redirect(base_url('logoutGoogle'));
+
+		} else {
+
+			$this->session->destroy_session();
+			redirect(base_url('login'));
+
+		}
+
+		
+	}
+
+	public function logoutGoogle(){
+		$this->load->view("frontend/logoutGoogle");
+	}
+
+	public function logoutStep2(){
 		$this->session->destroy_session();
 		redirect(base_url('login'));
 	}
@@ -1205,7 +1228,7 @@ class Frontend extends CI_Controller {
 
 			}
 
-
+			$this->session->set_userdata("type", "google");
 			$this->session->set_userdata("is_login", true);
 			$this->session->set_userdata("email", $email);
 	
