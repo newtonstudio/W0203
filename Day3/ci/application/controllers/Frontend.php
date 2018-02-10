@@ -1160,6 +1160,75 @@ class Frontend extends CI_Controller {
 	}
 
 
+	public function googleLogin() {
+
+
+		try {
+
+			$name = $this->input->post("name", true);
+			$avatar = $this->input->post("avatar", true);
+			$email = $this->input->post("email", true);
+			$googleID = $this->input->post("googleID", true);
+			$googleToken = $this->input->post("googleToken", true);
+
+			$this->load->model("User_model");
+
+			$userdata = $this->User_model->getOne(array(
+				'email' => $email,
+				'is_deleted' => 0,
+			));
+
+			if(empty($userdata)) {
+
+				$this->User_model->insert(array(
+					'type' => "google",
+					'name' => $name,
+					'avatar' => $avatar,
+					'email' => $email,
+					'googleID' => $googleID,
+					'googleToken' => $googleToken,
+					'created_date' => date("Y-m-d"),
+				));
+
+			} else {
+
+				$this->User_model->update(array(
+					'id' => $userdata['id'],
+				),array(
+					'name' => $name,
+					'avatar' => $avatar,
+					'googleToken' => $googleToken,
+					'modified_date' => date("Y-m-d"),
+				));
+
+			}
+
+
+			$this->session->set_userdata("is_login", true);
+			$this->session->set_userdata("email", $email);
+	
+
+			echo json_encode(array(
+					'status' => "OK",
+					'result' => "login",
+  			));
+
+
+			
+
+		} catch (Exception $e) {
+
+			echo json_encode(array(
+				'status' => "ERROR",
+				'result' => $e->getMesssage(),				
+			));
+			
+		}
+
+
+	}
+
+
 
 
 }
