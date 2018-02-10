@@ -88,6 +88,8 @@
 
 		        $.post("<?=base_url('googleLogin')?>",{"name":profile.getName(),"avatar":profile.getImageUrl(),email:profile.getEmail(),googleID:profile.getId(),googleToken:id_token}, function(data){
 
+		        	console.log(data);
+
 		        	if(data.status == "OK") {
 
 		        		console.log("Success");
