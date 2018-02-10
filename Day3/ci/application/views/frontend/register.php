@@ -137,6 +137,10 @@
 
 			  function statusChangeCallback(response){
 			  	console.log(response);
+			  	FB.api('/me', function(response) {
+			  		console.log(response);
+			       //console.log('Good to see you, ' + response.name + '.');
+			     });
 			  }
 
 			</script>
