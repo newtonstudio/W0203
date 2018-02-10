@@ -50,7 +50,7 @@
 
 									?>
 									<tr>
-										<td class="product"><a href="<?=base_url('product-detail/'.$v['product_id'].'/'.$v['product_title'])?>"><?=$v['product_title']?></a></td>
+										<td class="product"><a href="<?=base_url('product_detail/'.$v['product_id'].'/'.$v['product_title'])?>"><?=$v['product_title']?></a></td>
 										<td class="price">$<?=number_format($v['product_price'],2)?> </td>
 										<td class="quantity">
 											<div class="form-group">

@@ -4,7 +4,7 @@
 				<div class="container">
 					<ol class="breadcrumb">
 						<li><i class="fa fa-home pr-10"></i><a href="<?=base_url()?>">Home</a></li>
-						<li class="active">Login</li>
+						<li class="active">Reset Password</li>
 					</ol>
 				</div>
 			</div>
@@ -23,14 +23,12 @@
 
 							<!-- page-title start -->
 							<!-- ================ -->
-							<h1 class="page-title">Login</h1>
+							<h1 class="page-title">Reset Password</h1>
 							<div class="separator-2"></div>
 							<!-- page-title end -->
 
-							<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
 
-
-							<form method="POST" action="<?=base_url('login_submit')?>">
+							<form method="POST" action="<?=base_url('resetpassword_submit')?>">
 
 								<?php
 								if(isset($errormsg)) {
@@ -44,41 +42,31 @@
 								if(isset($_GET['msg'])) {
 								?>
 								<div class="alert alert-success">
-									Your email has been verified successfully, please login here
-								</div>
-								<?php	
-								}
-
-								if(isset($_GET['reset'])) {
-								?>
-								<div class="alert alert-success">
-									Your password has been reset successfully. Please login again.
+									We have sent the reset password link to your email, please check your mailbox
 								</div>
 								<?php	
 								}
 
 								?>
 
+								<input type="hidden" name="pwdRetrieavalCode" value="<?=$pwdRetrieavalCode?>" />
+								<input type="hidden" name="email" value="<?=$email?>" />
+
 
 								<div class="form-group">
-									<label for="name">Email</label>
-									<input type="email" name="email" placeholder="Please input your Email" class="form-control" />
-								</div>
-
-								<div class="form-group">
-									<label for="name">Password</label>
+									<label for="password">Password</label>
 									<input type="password" name="password" placeholder="Please input your password" class="form-control" />
 								</div>
 
-								
+								<div class="form-group">
+									<label for="password">Confirm Password</label>
+									<input type="password" name="repassword" placeholder="Please input your password again" class="form-control" />
+								</div>
 
 								<input type="submit" value="Submit" class="btn btn-primary" />
 
 							</form>
-
-							<p>Forget Password? <a href="<?=base_url('forgetpassword')?>">Click here</a></p>
-
-							<p>Not yet a member? <a href="<?=base_url('register')?>">Register here</a></p>
+							
 
 							
 

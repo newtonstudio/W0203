@@ -65,6 +65,13 @@ $route['contact'] = "frontend/contact";
 $route['about'] = "frontend/about";
 
 $route['login'] = "frontend/login";
+$route['logout'] = "frontend/logout";
+$route['forgetpassword'] = "frontend/forgetpassword";
+$route['forgetpassword_submit'] = "frontend/forgetpassword_submit";
+
+$route['resetpwd/(:any)/(:any)'] = "frontend/resetpwd/$1/$2";
+$route['resetpassword_submit'] = "frontend/resetpassword_submit";
+
 $route['login_submit'] = "frontend/login_submit";
 $route['register'] = "frontend/register";
 $route['register_submit'] = "frontend/register_submit";
@@ -73,6 +80,10 @@ $route['register_success'] = "frontend/register_success";
 $route['verify/(:any)/(:any)'] = "frontend/verify/$1/$2";
 
 $route['profile'] = "frontend/profile";
+$route['profile_submit'] = "frontend/profile_submit";
+
+$route['verifyMobile/(:any)'] = "frontend/verifyMobile/$1";
+$route['verifyMobileCode/(:num)'] = "frontend/verifyMobileCode/$1";
 
 $route['default_controller'] = 'frontend/index';
 $route['(:num)'] = 'frontend/index/$1';

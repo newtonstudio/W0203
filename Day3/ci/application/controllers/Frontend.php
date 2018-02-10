@@ -23,6 +23,17 @@ class Frontend extends CI_Controller {
 		
 		$this->data['cartList'] = $cartList;
 
+		$is_login = $this->session->userdata("is_login");
+
+		if(!$is_login) {
+			$this->data['is_login'] = false;
+		} else {
+			$this->data['is_login'] = true;
+		}
+			
+		
+
+
 	}
 
 	public function index($page=1)
@@ -699,6 +710,8 @@ class Frontend extends CI_Controller {
 			$email = $this->input->post("email", true);
 			$password = $this->input->post("password", true);
 
+
+
 			if(empty($email)) {
 				throw new Exception("email cannot be blank");
 			}
@@ -712,14 +725,22 @@ class Frontend extends CI_Controller {
 				'email' => $email,
 				'password' => sha1($password),
 				'is_deleted' => 0,
-			));
-			if(!empty($userExists)) {
+			));			
+
+
+			if(!empty($userExists)) {				
 
 				if( empty($userExists['verified']) ) {
 					throw new Exception("Your email has not been verified");
 				}
 				$this->session->set_userdata("is_login", true);
+				$this->session->set_userdata("email", $email);
+
 				redirect(base_url('profile'));
+
+			} else {
+
+				throw new Exception("Invalid Email or password");
 
 			}
 
@@ -743,10 +764,19 @@ class Frontend extends CI_Controller {
 	public function profile(){
 
 		$is_login = $this->session->userdata("is_login");
+		$email    = $this->session->userdata("email");
 
 		if(!$is_login) {
 			redirect(base_url('login'));
 		} else {
+
+
+			$this->load->model("User_model");
+			$userdata = $this->User_model->getOne(array(
+				'email' => $email,
+			));
+
+			$this->data['userdata']= $userdata;
 
 
 			$this->load->view('frontend/header', $this->data);
@@ -754,6 +784,378 @@ class Frontend extends CI_Controller {
 			$this->load->view('frontend/footer', $this->data);
 
 		}
+
+	}
+
+	public function profile_submit(){
+
+		try {
+
+			$name = $this->input->post("name", true);
+			$email = $this->input->post("email", true);
+			$mobile = $this->input->post("mobile", true);
+
+			$password = $this->input->post("password", true);
+			$repassword = $this->input->post("repassword", true);
+
+			if(!empty($password)) {
+
+				if($password != $repassword) {	
+
+					throw new Exception("Password and Confirm Password is not same");
+
+				}
+
+			}
+
+			if(empty($name)) {
+				throw new Exception("Name cannot be empty");
+			}
+			if(empty($email)) {
+				throw new Exception("email cannot be empty");
+			}
+
+			$this->load->model("User_model");
+
+			$session_email = $this->session->userdata("email");
+
+			$userData = $this->User_model->getOne(array(
+				'email' => $session_email,
+			));
+
+			$email_verified = $userData['verified'];
+			if($userData['email'] != $email) {
+				$email_verified = 0;
+			}
+
+			$mobile_verified = $userData['mobileVerified'];
+			if($userData['mobile'] != $mobile) {
+				$mobile_verified = 0;
+			}
+
+			$generatedCode = "";
+			if($email_verified == 0) {
+				$generatedCode = md5(date("YmdHis").rand(1000,9999));
+			}
+			
+
+			$this->User_model->update(array(
+				'email' => $session_email,
+			), array(
+				'name' => $name,
+				'email' => $email,
+				'mobile' => $mobile,
+				'verified' => $email_verified,
+				'generatedCode' => $generatedCode,
+				'mobileVerified' => $mobile_verified,
+				'modified_date' => date("Y-m-d H:i:s"),
+			));
+
+			if($email_verified == 0) {
+
+				$this->load->library("emailer");
+
+				$html = "";
+
+				$html .= "Hi ".$fullname.",<br/><br/>";
+				$html .= "You have receive this email becozs you just registered from IBeauty. Please click the link below for email verification: <br/>";
+
+				$html .= '<a href="'.base_url('verify/'.$email.'/'.$generatedCode).'">Click Here!</a><br/><br/>';
+
+				$html .= 'Yours sincerely, <br/>';
+				$html .= "IBeauty";
+
+				$this->emailer->send($email, "[IBeauty] Email Verification", $html);
+
+			}
+
+			redirect(base_url('profile?updated=User Profile Updated'));
+
+
+		} catch (Exception $e) {
+
+			$this->data['errormsg'] = $e->getMessage();
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/profile', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+
+		}
+
+
+
+	}
+
+	public function forgetpassword(){
+
+		$this->load->view('frontend/header', $this->data);
+		$this->load->view('frontend/forgetpassword', $this->data);
+		$this->load->view('frontend/footer', $this->data);
+
+
+	}
+
+	public function forgetpassword_submit(){
+
+		$this->load->model("User_model");
+
+		$email = $this->input->post("email", true);
+
+		$userExist = $this->User_model->getOne(array(
+			'email' => $email,
+			'verified' => 1,
+			'is_deleted' => 0,
+		));
+
+		if(!empty($userExist)) {
+
+			//We generate a random string pwdRetrievalCode, expiryDate
+			$randomString = sha1(date("YmdHis").rand(1000,9999));
+			$expiryDate   = date("Y-m-d H:i:s", time()+3600);
+
+			$this->User_model->update(array(
+				'id' => $userExist['id'],
+			), array(
+				'pwdRetrieavalCode' => $randomString,
+				'codeExpiryDate'	   => $expiryDate,
+				'modified_date'		=> date("Y-m-d H:i:s"),
+			));
+
+			$this->load->library("emailer");
+
+			$html = "";
+
+			$html .= "Hi ".$userExist['name'].",<br/><br/>";
+			$html .= "You have receive this email becozs you just trying to reset your password IBeauty. Please click the link below to reset your password: <br/>";
+
+			$html .= '<a href="'.base_url('resetpwd/'.$email.'/'.$randomString).'">Click Here!</a><br/><br/>';
+
+			$html .= 'Yours sincerely, <br/>';
+			$html .= "IBeauty";
+
+			$this->emailer->send($email, "[IBeauty] Reset Password", $html);
+
+			$this->data['errormsg'] = "Email sent";
+
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/forgetpassword', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+
+		} else {
+
+			$this->data['errormsg'] = "Invalid Email";
+
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/forgetpassword', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+
+		}
+
+
+
+	}
+
+	public function resetpwd($email, $randomString) {
+
+		$this->load->model("User_model");
+
+		$userExists = $this->User_model->getOne(array(
+			'email' => $email,
+			'pwdRetrieavalCode' => $randomString,
+			'codeExpiryDate >=' => date("Y-m-d H:i:s"),
+			'is_deleted' => 0,
+			'verified' => 1,
+		));
+
+		if(!empty($userExists)) {
+
+			$this->data['pwdRetrieavalCode'] = $randomString;
+			$this->data['email'] = $email;
+
+			$this->load->view('frontend/header', $this->data);
+			$this->load->view('frontend/resetpwd', $this->data);
+			$this->load->view('frontend/footer', $this->data);
+
+
+		} else {
+
+			show_error("Invalid Parameter");
+
+		}
+
+	}
+
+	public function resetpassword_submit(){
+
+		$password = $this->input->post("password", true);
+		$repassword = $this->input->post("repassword", true);
+		$pwdRetrieavalCode = $this->input->post("pwdRetrieavalCode", true);
+		$email = $this->input->post("email", true);
+
+
+		if(empty($password)) {
+			show_error("Password cannot be empty");
+		}
+
+		if($password != $repassword) {
+			show_error("Password is not same as the confirm password");
+		}
+
+
+		$this->load->model("User_model");
+
+		$userExists = $this->User_model->getOne(array(
+			'email' => $email,
+			'pwdRetrieavalCode' => $pwdRetrieavalCode,
+			'codeExpiryDate >=' => date("Y-m-d H:i:s"),
+			'is_deleted' => 0,
+			'verified' => 1,
+		));
+
+		if(!empty($userExists)) {
+
+			$this->User_model->update(array(
+				'id' => $userExists['id'],
+			), array(
+				'password' => sha1($password),
+				'modified_date' => date("Y-m-d H:i:s"),
+			));
+
+			redirect(base_url('login?reset=Password Reset Successfully'));
+
+		}
+
+
+
+
+
+	}
+
+
+	public function logout(){
+		$this->session->destroy_session();
+		redirect(base_url('login'));
+	}
+
+	public function verifyMobile($mobile) {
+
+		try {
+
+			if($this->data['is_login']) {
+
+				$email = $this->session->userdata("email");
+
+				$this->load->model("User_model");
+
+				$userdata = $this->User_model->getOne(array(
+					'email' => $email,
+					'mobileVerified' => 0,
+					'mobile' => $mobile,
+				));
+
+				$mobileCode = rand(1000,9999);
+				$mobileCodeExpiry = date("Y-m-d H:i:s", time()*24*3600);
+
+				$this->User_model->update(array(
+					'email' => $email,
+				), array(
+					'mobileCode' => $mobileCode,
+					'mobileCodeExpiryDate' => $mobileCodeExpiry,
+					'modified_date' => date("Y-m-d H:i:s"),
+				));
+
+
+				if(strlen($mobile) < 10 && strlen($mobile) > 11) {
+					throw new Exception("Mobile number length invalid");
+				}
+
+				$this->load->library("sms");
+
+				///uncomment this if you already have isms username and password
+				// and also balance > 0
+				//$this->sms->sendSms($mobile, "Your mobile verification code:".$mobileCode, 1);
+
+				echo json_encode(array(
+					'status' => "OK",
+					'result' => "mobile code sent",
+  				));
+
+
+			} else {
+
+				throw new Exception("You need to login first");
+				
+
+			}
+
+		} catch (Exception $e) {
+
+			echo json_encode(array(
+				'status' => "ERROR",
+				'result' => $e->getMesssage(),				
+			));
+			
+		}
+
+
+	}
+
+
+	public function verifyMobileCode($code) {
+
+
+		try {
+
+			if($this->data['is_login']) {
+
+				$email = $this->session->userdata("email");
+
+				$this->load->model("User_model");
+
+				$userdata = $this->User_model->getOne(array(
+					'email' => $email,
+					'mobileVerified' => 0,
+					'mobileCode' => $code,					
+					'mobileCodeExpiryDate >=' => date("Y-m-d H:i:s"),
+					'is_deleted' => 0,
+					'verified' => 1,
+				));
+
+				if(!empty($userdata))  {
+
+					$this->User_model->update(array(
+						'email' => $email,
+					), array(
+						'mobileVerified' => 1,
+						'modified_date' => date("Y-m-d H:i:s"),
+					));
+
+				}				
+
+				echo json_encode(array(
+					'status' => "OK",
+					'result' => "verified",
+  				));
+
+
+			} else {
+
+				throw new Exception("You need to login first");
+				
+
+			}
+
+		} catch (Exception $e) {
+
+			echo json_encode(array(
+				'status' => "ERROR",
+				'result' => $e->getMesssage(),				
+			));
+			
+		}
+
 
 	}
 

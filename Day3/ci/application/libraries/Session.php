@@ -13,7 +13,11 @@ class Session {
 	}
 
 	public function userdata($name) {
-		return $_SESSION[$name];
+		return isset($_SESSION[$name])?$_SESSION[$name]:null;
+	}
+
+	public function destroy_session(){
+		session_destroy();
 	}
 }
 ?>

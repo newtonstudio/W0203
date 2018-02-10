@@ -11,6 +11,11 @@
 		<meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
 		<meta name="author" content="htmlcoder.me">
 
+		<meta name="google-signin-scope" content="profile email">
+    	<meta name="google-signin-client_id" content="277763897621-sm987c9acs22fbi7k1jlprao5ctq8p0q.apps.googleusercontent.com">
+    	<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
 		<!-- Mobile Meta -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -140,9 +145,22 @@
 													<li>
 														<a href="<?=base_url()?>">Home</a>								
 													</li>
+													<?php
+													if(!$is_login) {
+													?>
 													<li>
 														<a href="<?=base_url('register')?>">Register</a>								
 													</li>
+													<li>
+														<a href="<?=base_url('login')?>">Login</a>								
+													</li>
+													<?php
+													} else {
+													?>
+													<li><a href="<?=base_url('logout')?>">Log Out</a></li>
+													<?php	
+													}
+													?>
 												</ul>
 												<!-- main-menu end -->
 												
